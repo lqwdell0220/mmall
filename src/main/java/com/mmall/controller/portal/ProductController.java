@@ -6,6 +6,7 @@ import com.mmall.service.IProductService;
 import com.mmall.vo.ProductDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +30,12 @@ public class ProductController {
         return iProductService.getProductDetail(productId);
     }
 
+    @RequestMapping("/{productId}")
+    @ResponseBody
+    public ServerResponse<ProductDetailVo> detailRestful(@PathVariable Integer productId){
+        return iProductService.getProductDetail(productId);
+    }
+
     @RequestMapping("list.do")
     @ResponseBody
     public ServerResponse<PageInfo> list(@RequestParam(value = "keyword",required = false)String keyword,
@@ -39,8 +46,32 @@ public class ProductController {
         return iProductService.getProductByKeywordCategory(keyword,categoryId,pageNum,pageSize,orderBy);
     }
 
+    @RequestMapping("/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}")
+    @ResponseBody
+    public ServerResponse<PageInfo> listRestful(@PathVariable(value = "keyword")String keyword,
+                                         @PathVariable(value = "categoryId")Integer categoryId,
+                                         @PathVariable(value = "pageNum") int pageNum,
+                                         @PathVariable(value = "pageSize") int pageSize,
+                                         @PathVariable(value = "orderBy") String orderBy){
+        return iProductService.getProductByKeywordCategory(keyword,categoryId,pageNum,pageSize,orderBy);
+    }
 
+    @RequestMapping("keyword/{keyword}/{pageNum}/{pageSize}/{orderBy}")
+    @ResponseBody
+    public ServerResponse<PageInfo> listRestfulwithoutcategoryId(@PathVariable(value = "keyword")String keyword,
+                                                @PathVariable(value = "pageNum") int pageNum,
+                                                @PathVariable(value = "pageSize") int pageSize,
+                                                @PathVariable(value = "orderBy") String orderBy){
+        return iProductService.getProductByKeywordCategory(keyword,null,pageNum,pageSize,orderBy);
+    }
 
-
+    @RequestMapping("cateogryId/{categoryId}/{pageNum}/{pageSize}/{orderBy}")
+    @ResponseBody
+    public ServerResponse<PageInfo> listRestfulwithoutkeyword(@PathVariable(value = "categoryId")Integer categoryId,
+                                                                 @PathVariable(value = "pageNum") int pageNum,
+                                                                 @PathVariable(value = "pageSize") int pageSize,
+                                                                 @PathVariable(value = "orderBy") String orderBy){
+        return iProductService.getProductByKeywordCategory("",null,pageNum,pageSize,orderBy);
+    }
 
 }
